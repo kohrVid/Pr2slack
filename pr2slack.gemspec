@@ -35,8 +35,12 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "json", ">= 1.8.3"
   spec.add_development_dependency "slack-ruby-bot"
+  spec.add_development_dependency "celluloid-io"
+  spec.add_development_dependency "pry-byebug"
   #spec.add_development_dependency "nokogiri"
   spec.add_runtime_dependency "json", ">= 1.8.3"
   spec.add_runtime_dependency "slack-ruby-bot"
+  spec.add_runtime_dependency "celluloid-io"
+  spec.add_runtime_dependency "pry-byebug"
   #spec.add_runtime_dependency "nokogiri"
 end

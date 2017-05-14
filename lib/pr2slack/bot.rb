@@ -1,22 +1,42 @@
 require 'slack-ruby-bot'
+require "pry"
 
 module Pr2slack
   class Bot < SlackRubyBot::Bot
-    scan(/.*/) do |client, data, match|
-      #SLACK_API_TOKEN = SLACK_API_TOKEN
-      header = { Authorization: "token #{GITHUB_AUTH_TOKEN}" }
-      req = Net::HTTP::Get.new(
-        "https://api.github.com/repos/#{REPO_OWNER}/#{REPO_NAME}/pulls", initheader = header 
-      )
-      res = Net::HTTP.start("https://api.github.com", "80") do |http|
-	http.request(req)
+
+    scan(//) do |client, data, match|
+      called = true
+      while 0 < 1
+      repo_owner = Pr2slack.configuration.REPO_OWNER
+      repo_name = Pr2slack.configuration.REPO_NAME
+      github_auth_token = Pr2slack.configuration.GITHUB_AUTH_TOKEN
+      header = { Authorization: "token #{github_auth_token}" }
+      uri = URI.parse("https://api.github.com/repos/#{repo_owner}/#{repo_name}/pulls")
+      #http = Net::HTTP.new(uri.host, uri.port).start
+      #req = Net::HTTP::Get.new(uri.request_uri, header)
+      #res = http.request(req)
+      res = Net::HTTP.get(uri)
+      @last_pr = {}
+      if !res.empty?
+        pr = JSON.parse(res).sort{|b| b["updated_at"] > b["updated_at"]}.last
+        message = format_message(pr)
+
+        if pr == @last_pr
+          puts "mew"
+        else
+          client.say(text: message, channel: data.channel)
+          @last_pr = pr
+        end
       end
-      puts JSON.parse(res.body)
-      #output_to_slack(message, client, data)
+      end
     end
     
-    def self.output_to_slack(message, client, data)
-      client.say(text: message, channel: data.channel)
+    def self.format_message(pr)
+      <<EOF
+Pull Request ##{ pr["number"] } was updated at #{pr["updated_at"]}
+#{pr["url"]}
+      #{ "It was merged at #{ pr["merged_at"] }" unless pr["merged_at"].nil? }
+EOF
     end
   end
 end

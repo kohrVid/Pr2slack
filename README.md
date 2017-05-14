@@ -22,10 +22,16 @@ Or install it yourself as:
 
 ## Usage
 
-Add the following `to config/initializers/pr2slack.rb`:
+Run:
 
 ```ruby
-class Pr2slack.configure do |config|
+rails g pr2slack:install
+```
+
+Update the following in `config/initializers/pr2slack.rb`:
+
+```ruby
+Pr2slack.configure do |config|
   config.REPO_OWNER = "REPO_OWNER"
   config.REPO_NAME = "REPO_NAME"
   config.GITHUB_AUTH_TOKEN = "GITHUB_AUTH_TOKEN"
